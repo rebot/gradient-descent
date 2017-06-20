@@ -1,11 +1,12 @@
-%matplotlib inline
 import os
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from IPython.display import HTML
 
-matplotlib.rcParams['animation.writer'] = 'avconv'
+Writer = animation.writers['ffmpeg']
+writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
 
 x = np.linspace(1, 20, 30)
 y = np.linspace(3, 50, 30) + 5
@@ -29,8 +30,8 @@ def gradient_decent_runner(points, initital_b, initial_m, learning_rate, num_ite
         ])
         plots.append((plt.scatter(x,np.polyval(p, x)),))
     anim = animation.ArtistAnimation(fig, plots, interval=50, repeat_delay=3000, blit=True)
-    HTML(anim.to_html5_video())
+    anim.save('anim.mp4', writer=writer)
     return p
 
 if __name__ == '__main__':
-    [b, m] = gradient_decent_runner([x,y],0,0,0.05,50)
+    [b, m] = gradient_decent_runner([x,y],0,0,0.005,50)
